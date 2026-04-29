@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Core.Models;
 
-namespace UnifiedAIChat.Infrastructure.Persistance
+namespace UnifiedAIChat.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {
