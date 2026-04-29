@@ -18,7 +18,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
             builder.Property(m => m.Content).IsRequired();
 
             builder.Property(m => m.Role).HasConversion<string>().HasMaxLength(20).IsRequired();
-
+            builder.HasQueryFilter(m => !m.Chat.IsDeleted);
             builder.HasOne(m => m.Chat).WithMany(c => c.Messages).HasForeignKey(m => m.ChatId).OnDelete(DeleteBehavior.Cascade);
 
         }
