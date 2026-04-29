@@ -8,8 +8,8 @@ namespace UnifiedAIChat.Core.Models
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public string ChatName { get; set; } = null!;
-        public string Model { get; set; } = null!;
+        public string? ChatName { get; set; }
+        public string? Model { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
