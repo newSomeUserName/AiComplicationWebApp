@@ -19,6 +19,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
 
             builder.Property(u=> u.PasswordHash).HasMaxLength(512).IsRequired();
 
+            builder.Property(u => u.Role).HasConversion<string>().HasMaxLength(20).IsRequired();
 
         }
     }

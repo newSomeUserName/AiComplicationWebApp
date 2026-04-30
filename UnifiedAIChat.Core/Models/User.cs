@@ -11,6 +11,6 @@ namespace UnifiedAIChat.Core.Models
         public string PasswordHash { get; set; } = null!;
         public DateTime CreationTime { get; set; }
         public ICollection<Chat> Chats { get; set; } = new List<Chat>();
-
+        public Role Role { get; set; }
     }
 }
