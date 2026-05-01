@@ -1,5 +1,4 @@
 using UnifiedAIChat.Api;
-using UnifiedAIChat.Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

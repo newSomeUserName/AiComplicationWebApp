@@ -38,5 +38,10 @@ namespace UnifiedAIChat.Infrastructure.Authentication
        
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public string HashToken(string rawToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
