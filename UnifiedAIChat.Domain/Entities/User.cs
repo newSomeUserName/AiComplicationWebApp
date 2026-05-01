@@ -13,5 +13,7 @@ namespace UnifiedAIChat.Domain.Entities
         public DateTime CreationTime { get; set; }
         public ICollection<Chat> Chats { get; set; } = new List<Chat>();
         public Role Role { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
     }
 }
