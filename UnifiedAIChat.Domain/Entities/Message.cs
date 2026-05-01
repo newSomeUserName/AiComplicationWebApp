@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UnifiedAIChat.Core.Models
+namespace UnifiedAIChat.Domain.Entities
 {
     public class Message
     {

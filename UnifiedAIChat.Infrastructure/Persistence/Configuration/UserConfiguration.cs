@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnifiedAIChat.Core.Models;
+using UnifiedAIChat.Domain.Entities;
 
 namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
 {
@@ -20,6 +20,8 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
             builder.Property(u=> u.PasswordHash).HasMaxLength(512).IsRequired();
 
             builder.Property(u => u.Role).HasConversion<string>().HasMaxLength(20).IsRequired();
+
+            builder.Property(u => u.Name).HasMaxLength(50).IsRequired();
 
         }
     }

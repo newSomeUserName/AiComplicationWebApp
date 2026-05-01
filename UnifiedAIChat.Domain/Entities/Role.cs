@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace UnifiedAIChat.Core.Models
+namespace UnifiedAIChat.Domain.Entities
 {
-    public enum MessageRole
+    public enum Role
     {
         User,
-        Assistant,
-        System
+        Admin
     }
 }

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnifiedAIChat.Core.Models;
+using UnifiedAIChat.Domain.Entities;
 
 namespace UnifiedAIChat.Infrastructure.Persistence
 {

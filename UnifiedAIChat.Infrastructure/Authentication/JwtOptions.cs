@@ -1,6 +1,10 @@
-﻿namespace UnifiedAIChat.Api.AppConfiguration.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace UnifiedAIChat.Infrastructure.Authentication
 {
-    internal class JwtOptions
+    public  class JwtOptions
     {
         public const string SectionName = "Jwt";
         public string Key { get; set; } = string.Empty;

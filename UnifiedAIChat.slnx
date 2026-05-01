@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="UnifiedAIChat.Api/UnifiedAIChat.Api.csproj" />
-  <Project Path="UnifiedAIChat.Core/UnifiedAIChat.Core.csproj" />
+  <Project Path="UnifiedAIChat.Application/UnifiedAIChat.Application.csproj" Id="f0846bce-be99-40d0-9cf9-28319537d72e" />
+  <Project Path="UnifiedAIChat.Domain/UnifiedAIChat.Domain.csproj" />
   <Project Path="UnifiedAIChat.Infrastructure/UnifiedAIChat.Infrastructure.csproj" />
 </Solution>
