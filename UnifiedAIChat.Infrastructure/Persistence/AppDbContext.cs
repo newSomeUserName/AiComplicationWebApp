@@ -8,6 +8,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<Chat> Chats => Set<Chat>();
         public DbSet<Message> Messages => Set<Message>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -16,7 +17,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence
         }
 
     }
-   
+
 
 
 }
