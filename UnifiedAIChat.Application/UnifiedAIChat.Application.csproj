@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UnifiedAIChat.Domain\UnifiedAIChat.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
