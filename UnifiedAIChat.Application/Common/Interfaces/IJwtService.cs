@@ -5,6 +5,7 @@ namespace UnifiedAIChat.Application.Common.Interfaces
     public interface IJwtService
     {
         string GenerateToken(UserTokenPayload userTokenPayload);
+        RefreshTokenData GenerateRefreshToken();
         string HashToken(string rawToken);
 
     }

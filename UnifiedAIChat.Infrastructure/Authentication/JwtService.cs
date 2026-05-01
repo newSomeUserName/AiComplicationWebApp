@@ -1,13 +1,14 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Application.Common.Models;
 
 namespace UnifiedAIChat.Infrastructure.Authentication
 {
-    public class JwtService : IJwtService
+    public class JwtService : IJwtService //TODO: to think about renaming of service to TokenService
     {
         private readonly JwtOptions _jwtOptions;
 
@@ -19,7 +20,7 @@ namespace UnifiedAIChat.Infrastructure.Authentication
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, userTokenPayload.Id),
+                new Claim(ClaimTypes.NameIdentifier, userTokenPayload.Id), //JwtRegisteredClaimNames.Sub
                 new Claim(ClaimTypes.Name, userTokenPayload.Name),
                 new Claim(ClaimTypes.Email, userTokenPayload.Email),
             };
@@ -35,13 +36,26 @@ namespace UnifiedAIChat.Infrastructure.Authentication
                 signingCredentials: credentials
                 );
 
-       
+            
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public RefreshTokenData GenerateRefreshToken()
+        {
+            var randomBytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
 
+            var rawToken = Convert.ToHexString(randomBytes);
+            var hash = HashToken(rawToken);
+
+            return new RefreshTokenData { Hash = hash , RawToken = rawToken};
+        }
+            
         public string HashToken(string rawToken)
         {
-            throw new NotImplementedException();
+            var bytes = Encoding.UTF8.GetBytes(rawToken);
+            var hash = SHA256.HashData(bytes);
+            return Convert.ToHexString(hash);
         }
     }
 }

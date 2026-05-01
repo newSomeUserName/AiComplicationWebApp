@@ -10,7 +10,7 @@ namespace UnifiedAIChat.Infrastructure.Authentication
         public string Key { get; set; } = string.Empty;
         public string Issuer { get; set; } = string.Empty;
         public string Audience { get; set; } = string.Empty;
-        public int ExpirationMinutes { get; set; }
+        public int ExpirationMinutes { get; set; } //TODO: rename to AccessTokenMinutes
         public int ExpirationDays { get; set; }
     }
 }
