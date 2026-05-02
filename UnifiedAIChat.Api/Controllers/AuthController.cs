@@ -15,7 +15,7 @@ namespace UnifiedAIChat.Api.Controllers
             _authService = authService;
         }
 
-        [HttpPost("r")] //TODO : rename to /register
+        [HttpPost("register")]
         public async Task<ActionResult<string>> RegisterAsync(RegisterRequest request, CancellationToken ct)
         {
             RegisterCommand command = new RegisterCommand(request.Name,request.Email, request.Password);

@@ -36,7 +36,7 @@ namespace UnifiedAIChat.Application.Services
             string passwordHash = _passwordHasher.HashPassword(registerCommand.Password);
 
 
-            User user = new User() { Name = registerCommand.Name, Email = registerCommand.Password, PasswordHash = passwordHash, Role = Role.User };
+            User user = new User() { Name = registerCommand.Name, Email = registerCommand.Email, PasswordHash = passwordHash, Role = Role.User };
             await _userRepository.AddUserAsync(user, ct);
 
             string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString() ,Name = registerCommand.Name, Email = registerCommand.Email});

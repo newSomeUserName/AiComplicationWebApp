@@ -27,7 +27,6 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         public async Task<bool> IfEmailExistsAsync(string email, CancellationToken ct = default)
         {
             return false;
-            //throw new NotImplementedException();
         }
     }
 }
