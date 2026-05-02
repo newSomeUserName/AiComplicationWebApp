@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Application.Common.Interfaces;
+using UnifiedAIChat.Application.Common.Interfaces.Auth;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
+using UnifiedAIChat.Application.Common.Models;
+using UnifiedAIChat.Application.Common.Models.Auth;
+using UnifiedAIChat.Domain.Entities;
 
 namespace UnifiedAIChat.Application.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly IJwtService _jwtService;
         private readonly IPasswordHasher _passwordHasher;
@@ -17,20 +21,30 @@ namespace UnifiedAIChat.Application.Services
             _passwordHasher = passwordHasher;
             _userRepository = userRepository;
         }
-        public async Task RegisterAsync(string email, string password, CancellationToken ct)
+        public async Task<string> RegisterAsync(RegisterCommand registerCommand, CancellationToken ct)
         {
 
-            ArgumentException.ThrowIfNullOrEmpty(email);
-            ArgumentException.ThrowIfNullOrEmpty(password);
+            ArgumentException.ThrowIfNullOrEmpty(registerCommand.Name);
+            ArgumentException.ThrowIfNullOrEmpty(registerCommand.Password);
+            ArgumentException.ThrowIfNullOrEmpty(registerCommand.Email);
 
-            if (await _userRepository.IfEmailExistsAsync(email,ct))
+            if (await _userRepository.IfEmailExistsAsync(registerCommand.Email, ct))
             {
                 throw new Exception("User Exists"); // TODO: UserExistsException 
             }
 
-            string passwordHash = _passwordHasher.HashPassword(password);
+            string passwordHash = _passwordHasher.HashPassword(registerCommand.Password);
 
 
+            User user = new User() { Name = registerCommand.Name, Email = registerCommand.Password, PasswordHash = passwordHash, Role = Role.User };
+            await _userRepository.AddUserAsync(user, ct);
+
+            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString() ,Name = registerCommand.Name, Email = registerCommand.Email});
+        
+
+           
+           
+            return token;
 
 
         }

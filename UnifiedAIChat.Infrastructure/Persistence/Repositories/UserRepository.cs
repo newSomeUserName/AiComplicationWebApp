@@ -13,19 +13,21 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-        public Task AddUserAsync(User user, CancellationToken ct = default)
+        public async Task AddUserAsync(User user, CancellationToken ct)
+        {
+            await _context.Users.AddAsync(user, ct);
+            await _context.SaveChangesAsync(); // TODO: Change to UoW
+        }
+
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
+        public async Task<bool> IfEmailExistsAsync(string email, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IfEmailExistsAsync(string email, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
+            return false;
+            //throw new NotImplementedException();
         }
     }
 }
