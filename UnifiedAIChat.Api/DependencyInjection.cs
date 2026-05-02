@@ -1,4 +1,5 @@
 ﻿using UnifiedAIChat.Api.Extensions;
+using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Infrastructure.Authentication;
 using UnifiedAIChat.Infrastructure.Persistence;
 
@@ -16,6 +17,8 @@ namespace UnifiedAIChat.Api
             builder.Services.AddJwtAuthentication();
 
             builder.Services.AddAuthorization();
+
+            builder.Services.AddScoped<IJwtService, JwtService>();
 
         }
     }

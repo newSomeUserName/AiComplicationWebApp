@@ -10,6 +10,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _context;
+        //private readonly UnitOfWork _unitOfWork; TODO: UoW
 
         //At first i will make a simple add then i will rewrite it to UoW
         public RefreshTokenRepository(AppDbContext context)

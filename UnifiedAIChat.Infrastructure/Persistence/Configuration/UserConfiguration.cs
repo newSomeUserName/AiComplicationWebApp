@@ -21,7 +21,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
 
             builder.Property(u => u.Role).HasConversion<string>().HasMaxLength(20).IsRequired();
 
-            builder.Property(u => u.Name).HasMaxLength(50).IsRequired();
+            builder.Property(u => u.Name).HasMaxLength(50);
 
         }
     }
