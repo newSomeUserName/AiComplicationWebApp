@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
@@ -26,7 +27,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
 
         public async Task<bool> IfEmailExistsAsync(string email, CancellationToken ct = default)
         {
-            return false;
+            return await _context.Users.FirstOrDefaultAsync(u=> u.Email == email) is not null;
         }
     }
 }

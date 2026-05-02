@@ -1,4 +1,5 @@
 ﻿using UnifiedAIChat.Api.Extensions;
+using UnifiedAIChat.Api.Middlewares;
 using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Application.Common.Interfaces.Auth;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
@@ -14,6 +15,7 @@ namespace UnifiedAIChat.Api
     {
         public static void InitializeInjections(this WebApplicationBuilder builder)
         {
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
             builder.Services.AddControllers();
 

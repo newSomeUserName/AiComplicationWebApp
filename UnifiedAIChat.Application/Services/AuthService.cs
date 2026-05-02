@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnifiedAIChat.Application.Common.Exceptions;
 using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Application.Common.Interfaces.Auth;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
@@ -30,7 +31,7 @@ namespace UnifiedAIChat.Application.Services
 
             if (await _userRepository.IfEmailExistsAsync(registerCommand.Email, ct))
             {
-                throw new Exception("User Exists"); // TODO: UserExistsException 
+                throw new ConflictException($"User with {registerCommand.Email} exists. Try again");
             }
 
             string passwordHash = _passwordHasher.HashPassword(registerCommand.Password);
