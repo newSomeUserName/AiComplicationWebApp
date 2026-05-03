@@ -29,7 +29,8 @@ namespace UnifiedAIChat.Api.Middlewares
 
             if (exceptionStatus.ExceptionCode >= 500)
             {
-                _logger.LogError($"{exceptionStatus.ExceptionCode}:    \n {exceptionStatus.Message}");
+                Console.WriteLine(exceptionStatus.Message);
+                //_logger.LogError($"{exceptionStatus.ExceptionCode}:    \n {exceptionStatus.Message}");
             }
             else
             {

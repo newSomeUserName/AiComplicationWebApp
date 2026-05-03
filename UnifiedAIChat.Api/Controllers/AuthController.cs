@@ -32,5 +32,23 @@ namespace UnifiedAIChat.Api.Controllers
 
             return Ok(token);
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> LoginAsync(LoginRequest request, CancellationToken ct)
+        {
+            LoginCommand command = new LoginCommand(request.Email, request.Password);
+            string token = await _authService.LoginAsync(command, ct);
+
+
+            Response.Cookies.Append("access_token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+            });
+
+            return Ok(token);
+        }
     }
 }
