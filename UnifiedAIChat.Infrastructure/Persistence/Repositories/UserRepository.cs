@@ -17,12 +17,12 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         public async Task AddUserAsync(User user, CancellationToken ct)
         {
             await _context.Users.AddAsync(user, ct);
-            await _context.SaveChangesAsync(); // TODO: Change to UoW
+            await _context.SaveChangesAsync(ct); // TODO: Change to UoW
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(u=> u.Email == email, ct);
         }
 
         public async Task<bool> IfEmailExistsAsync(string email, CancellationToken ct = default)

@@ -40,18 +40,33 @@ namespace UnifiedAIChat.Application.Services
             User user = new User() { Name = registerCommand.Name, Email = registerCommand.Email, PasswordHash = passwordHash, Role = Role.User };
             await _userRepository.AddUserAsync(user, ct);
 
-            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString() ,Name = registerCommand.Name, Email = registerCommand.Email});
-        
+            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = registerCommand.Name, Email = registerCommand.Email });
 
-           
-           
+
+
+
             return token;
 
 
         }
-        public async Task LoginAsync()
+        public async Task<string> LoginAsync(LoginCommand loginCommand, CancellationToken ct)
         {
+            var user = await _userRepository.GetByEmailAsync(loginCommand.Email, ct);
 
+            if (user is null)
+            {
+                throw new Exception("Not Found"); // TODO : not found exception
+            }
+
+            if (!_passwordHasher.VerifyPassword(loginCommand.Password, user.PasswordHash))
+            {
+                throw new Exception("Incorret Password"); // TODO : incorect password exception
+            }
+
+            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email });
+
+
+            return token;
 
         }
         public async Task RefreshAsync()
