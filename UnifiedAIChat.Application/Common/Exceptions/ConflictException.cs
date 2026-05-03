@@ -4,8 +4,10 @@ using System.Text;
 
 namespace UnifiedAIChat.Application.Common.Exceptions
 {
-    public class ConflictException : Exception
+     //TODO: implement AppException
+    public class ConflictException  : Exception
     {
+        
         public ConflictException(string message) : base(message) { }
         
     }
