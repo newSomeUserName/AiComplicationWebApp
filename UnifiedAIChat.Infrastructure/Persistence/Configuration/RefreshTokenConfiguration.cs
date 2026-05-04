@@ -11,6 +11,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
+            builder.ToTable("RefreshToken");
             builder.HasKey(rt => rt.Id);
             builder.Property(rt => rt.TokenHash).HasMaxLength(64).IsRequired();
             builder.HasIndex(rt => rt.TokenHash).IsUnique();

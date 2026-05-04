@@ -27,13 +27,13 @@ namespace UnifiedAIChat.Api
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IJwtService, JwtService>(); //TODO : recreate to singleton
             builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         }
     }
 }

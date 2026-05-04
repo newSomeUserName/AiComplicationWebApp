@@ -52,7 +52,7 @@ namespace UnifiedAIChat.Infrastructure.Authentication
             return new RefreshTokenData { Hash = hash , RawToken = rawToken};
         }
             
-        public string HashToken(string rawToken)
+        public string HashToken(string rawToken) //TODO: recreate to private method
         {
             var bytes = Encoding.UTF8.GetBytes(rawToken);
             var hash = SHA256.HashData(bytes);

@@ -16,11 +16,14 @@ namespace UnifiedAIChat.Application.Services
         private readonly IJwtService _jwtService;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUserRepository _userRepository;
-        public AuthService(IJwtService jwtService, IPasswordHasher passwordHasher, IUserRepository userRepository)
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+
+        public AuthService(IJwtService jwtService, IPasswordHasher passwordHasher, IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
         {
             _jwtService = jwtService;
             _passwordHasher = passwordHasher;
             _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
         }
         public async Task<string> RegisterAsync(RegisterCommand registerCommand, CancellationToken ct)
         {
@@ -41,15 +44,17 @@ namespace UnifiedAIChat.Application.Services
             await _userRepository.AddUserAsync(user, ct);
 
             string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = registerCommand.Name, Email = registerCommand.Email });
+            
+            //TODO: Check
+            RefreshTokenData rtd = _jwtService.GenerateRefreshToken();
 
-
-
+            await _refreshTokenRepository.AddAsync(new RefreshToken() { UserId = user.Id, TokenHash = rtd.Hash, ExpiresAt = DateTime.UtcNow.AddDays(15), CreatedAt = DateTime.UtcNow });
 
             return token;
 
 
         }
-        public async Task<string> LoginAsync(LoginCommand loginCommand, CancellationToken ct)
+        public async Task<LoginData> LoginAsync(LoginCommand loginCommand, CancellationToken ct)
         {
             var user = await _userRepository.GetByEmailAsync(loginCommand.Email, ct);
 
@@ -63,10 +68,16 @@ namespace UnifiedAIChat.Application.Services
                 throw new Exception("Incorret Password"); // TODO : incorect password exception
             }
 
-            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email });
+            string accessToken = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email });
 
 
-            return token;
+            //TODO: Check
+
+            RefreshTokenData rtd = _jwtService.GenerateRefreshToken();
+            await _refreshTokenRepository.AddAsync(new RefreshToken() { UserId = user.Id, TokenHash = rtd.Hash, ExpiresAt = DateTime.UtcNow.AddDays(15), CreatedAt = DateTime.UtcNow });
+
+
+            return new LoginData(accessToken, rtd.RawToken,DateTime.UtcNow.AddDays(15));
 
         }
         public async Task RefreshAsync()
