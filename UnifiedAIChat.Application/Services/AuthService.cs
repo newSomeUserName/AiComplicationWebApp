@@ -25,7 +25,7 @@ namespace UnifiedAIChat.Application.Services
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
         }
-        public async Task<string> RegisterAsync(RegisterCommand registerCommand, CancellationToken ct)
+        public async Task<LoginData> RegisterAsync(RegisterCommand registerCommand, CancellationToken ct)
         {
 
             ArgumentException.ThrowIfNullOrEmpty(registerCommand.Name);
@@ -43,14 +43,14 @@ namespace UnifiedAIChat.Application.Services
             User user = new User() { Name = registerCommand.Name, Email = registerCommand.Email, PasswordHash = passwordHash, Role = Role.User };
             await _userRepository.AddUserAsync(user, ct);
 
-            string token = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = registerCommand.Name, Email = registerCommand.Email });
+            string accessToken = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = registerCommand.Name, Email = registerCommand.Email });
             
             //TODO: Check
             RefreshTokenData rtd = _jwtService.GenerateRefreshToken();
 
-            await _refreshTokenRepository.AddAsync(new RefreshToken() { UserId = user.Id, TokenHash = rtd.Hash, ExpiresAt = DateTime.UtcNow.AddDays(15), CreatedAt = DateTime.UtcNow });
+            await _refreshTokenRepository.AddAsync(new RefreshToken() { UserId = user.Id, TokenHash = rtd.Hash, ExpiresAt = DateTime.UtcNow.AddDays(15), CreatedAt = DateTime.UtcNow }, ct);
 
-            return token;
+            return new LoginData(accessToken, rtd.RawToken, DateTime.UtcNow.AddDays(15));
 
 
         }
@@ -68,7 +68,9 @@ namespace UnifiedAIChat.Application.Services
                 throw new Exception("Incorret Password"); // TODO : incorect password exception
             }
 
-            string accessToken = _jwtService.GenerateToken(new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email });
+            var userTokenPayload = new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email };
+
+            string accessToken = _jwtService.GenerateToken(userTokenPayload);
 
 
             //TODO: Check
@@ -80,8 +82,24 @@ namespace UnifiedAIChat.Application.Services
             return new LoginData(accessToken, rtd.RawToken,DateTime.UtcNow.AddDays(15));
 
         }
-        public async Task RefreshAsync()
+        public async Task<LoginData> RefreshAsync(string rawRefreshToken, CancellationToken ct)
         {
+            string refreshTokenHash = _jwtService.HashToken(rawRefreshToken);
+            RefreshToken usedRefreshToken = await _refreshTokenRepository.GetByHashAsync(refreshTokenHash) ?? throw new Exception("Token could be stollen"); // TODO: create expiredOrStollenTokenException
+
+            User user = usedRefreshToken.User;
+
+
+            var userTokenPayload = new UserTokenPayload() { Id = user.Id.ToString(), Name = user.Name, Email = user.Email };
+            
+            string accessToken = _jwtService.GenerateToken(userTokenPayload);
+            RefreshTokenData rtd = _jwtService.GenerateRefreshToken();
+          
+            string newHash = await _refreshTokenRepository.AddAsync(new RefreshToken() { UserId = user.Id, TokenHash = rtd.Hash, ExpiresAt = DateTime.UtcNow.AddDays(15), CreatedAt = DateTime.UtcNow });
+
+            await _refreshTokenRepository.UpdateAsync(usedRefreshToken, newHash, ct);
+
+            return new LoginData(accessToken, rtd.RawToken, DateTime.UtcNow.AddDays(15));
 
         }
         public async Task LogoutAsync()

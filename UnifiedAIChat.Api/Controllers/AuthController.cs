@@ -19,28 +19,38 @@ namespace UnifiedAIChat.Api.Controllers
         public async Task<ActionResult<string>> RegisterAsync(RegisterRequest request, CancellationToken ct)
         {
             RegisterCommand command = new RegisterCommand(request.Name,request.Email, request.Password);
-            string token = await _authService.RegisterAsync(command,ct);
+            LoginData tokensData = await _authService.RegisterAsync(command,ct);
 
 
-            Response.Cookies.Append("access_token", token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(15)
-            });
+            AppendToknes(tokensData);
 
-            return Ok(token);
+            return Ok(tokensData);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginAsync(LoginRequest request, CancellationToken ct)
         {
             LoginCommand command = new LoginCommand(request.Email, request.Password);
-            LoginData token = await _authService.LoginAsync(command, ct);
+            LoginData tokensData = await _authService.LoginAsync(command, ct);
+            AppendToknes(tokensData);
 
+            return Ok(tokensData);
+        }
+        [HttpPost("refresh")]
+        public async Task<ActionResult<string>> RefreshAsync(CancellationToken ct)
+        {
+            string rawRefreshToken = Request.Cookies["refresh_token"] ?? throw new Exception("Unable to read refresh token");
 
-            Response.Cookies.Append("access_token", token.AccessToken, new CookieOptions
+            LoginData tokensData = await _authService.RefreshAsync(rawRefreshToken);
+
+            AppendToknes(tokensData);
+
+            return Ok(tokensData);
+        }
+
+        private void AppendToknes(LoginData tokensData)
+        {
+            Response.Cookies.Append("access_token", tokensData.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
@@ -48,15 +58,13 @@ namespace UnifiedAIChat.Api.Controllers
                 Expires = DateTimeOffset.UtcNow.AddMinutes(15)
             });
 
-            Response.Cookies.Append("refresh_token", token.RefreshToken, new CookieOptions
+            Response.Cookies.Append("refresh_token", tokensData.RefreshToken, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+                Expires = DateTimeOffset.UtcNow.AddMinutes(35)
             });
-
-            return Ok(token);
         }
     }
 }

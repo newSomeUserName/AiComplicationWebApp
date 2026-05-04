@@ -7,9 +7,9 @@ namespace UnifiedAIChat.Application.Common.Interfaces
 {
     public interface IRefreshTokenRepository
     {
-        Task AddAsync(RefreshToken token);
-        Task<RefreshToken?> GetByHashAsync(string hash);
-        Task UpdateAsync(string hash);
+        Task<string> AddAsync(RefreshToken token, CancellationToken ct = default);
+        Task<RefreshToken?> GetByHashAsync(string rawHash, CancellationToken ct = default);
+        Task UpdateAsync(RefreshToken oldToken, string hash,CancellationToken ct = default);
         Task RevokeAllUserTokenAsync(Guid userId);
     }
 }

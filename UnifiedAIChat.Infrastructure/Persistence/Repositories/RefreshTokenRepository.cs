@@ -17,18 +17,19 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-        public async Task AddAsync(RefreshToken token)
+        public async Task<string> AddAsync(RefreshToken token, CancellationToken ct = default)
         {
-            await _context.RefreshTokens.AddAsync(token);
-            await _context.SaveChangesAsync();
+            await _context.RefreshTokens.AddAsync(token, ct);
+            await _context.SaveChangesAsync(ct);
+            return token.TokenHash;
         }
 
-        public async Task<RefreshToken?> GetByHashAsync(string hash)
+        public async Task<RefreshToken?> GetByHashAsync(string refreshTokenHash, CancellationToken ct = default)
         {
 
-            ArgumentException.ThrowIfNullOrWhiteSpace(hash);
+            ArgumentException.ThrowIfNullOrWhiteSpace(refreshTokenHash);
 
-            return await _context.RefreshTokens.Include(rt => rt.User).FirstOrDefaultAsync(t => t.TokenHash == hash);
+            return await _context.RefreshTokens.Include(rt => rt.User).FirstOrDefaultAsync(t => t.TokenHash == refreshTokenHash, ct);
 
         }
 
@@ -37,9 +38,11 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task UpdateAsync(string hash)
+        public async Task UpdateAsync(RefreshToken oldToken ,string newHash, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            oldToken.ReplacedByTokenHash = newHash;
+            await _context.SaveChangesAsync(ct);
+
         }
     }
 }
