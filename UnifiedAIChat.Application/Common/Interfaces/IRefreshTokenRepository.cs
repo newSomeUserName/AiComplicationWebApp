@@ -10,6 +10,6 @@ namespace UnifiedAIChat.Application.Common.Interfaces
         Task<string> AddAsync(RefreshToken token, CancellationToken ct = default);
         Task<RefreshToken?> GetByHashAsync(string rawHash, CancellationToken ct = default);
         Task UpdateAsync(RefreshToken oldToken, string hash,CancellationToken ct = default);
-        Task RevokeAllUserTokenAsync(Guid userId);
+        Task RevokeFamilyTokenAsync(Guid familyId, CancellationToken ct = default);
     }
 }

@@ -10,7 +10,7 @@ namespace UnifiedAIChat.Application.Common.Interfaces.Auth
         Task<LoginData> RegisterAsync(RegisterCommand registerCommand, CancellationToken ct = default);
         Task<LoginData> LoginAsync(LoginCommand loginCommand, CancellationToken ct = default);
         Task<LoginData> RefreshAsync(string rawRefreshToken, CancellationToken ct = default);
-        Task LogoutAsync();
+        Task LogoutAsync(string rawRefreshToken, CancellationToken ct = default);
         Task LogoutAllAsync();
     }
 }

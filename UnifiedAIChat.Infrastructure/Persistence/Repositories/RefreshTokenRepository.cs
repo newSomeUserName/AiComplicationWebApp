@@ -17,14 +17,14 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
-        public async Task<string> AddAsync(RefreshToken token, CancellationToken ct = default)
+        public async Task<string> AddAsync(RefreshToken token, CancellationToken ct)
         {
             await _context.RefreshTokens.AddAsync(token, ct);
             await _context.SaveChangesAsync(ct);
             return token.TokenHash;
         }
 
-        public async Task<RefreshToken?> GetByHashAsync(string refreshTokenHash, CancellationToken ct = default)
+        public async Task<RefreshToken?> GetByHashAsync(string refreshTokenHash, CancellationToken ct)
         {
 
             ArgumentException.ThrowIfNullOrWhiteSpace(refreshTokenHash);
@@ -33,14 +33,16 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
 
         }
 
-        public async Task RevokeAllUserTokenAsync(Guid userId)
+        public async Task RevokeFamilyTokenAsync(Guid familyId, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            await _context.RefreshTokens.Where(rt => rt.FamilyId == familyId && rt.RevokedAt == null)
+                .ExecuteUpdateAsync(sb => sb.SetProperty(t=>t.RevokedAt, DateTime.UtcNow), ct);
         }
 
         public async Task UpdateAsync(RefreshToken oldToken ,string newHash, CancellationToken ct)
         {
             oldToken.ReplacedByTokenHash = newHash;
+            oldToken.RevokedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync(ct);
 
         }

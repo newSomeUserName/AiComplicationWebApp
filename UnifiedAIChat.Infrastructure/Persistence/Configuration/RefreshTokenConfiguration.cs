@@ -21,6 +21,8 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
             builder.Property(rt => rt.ExpiresAt).IsRequired();
             builder.Property(rt => rt.CreatedAt).IsRequired();
 
+            builder.HasIndex(rt => rt.FamilyId);
+
         }
     }
 }
