@@ -2,6 +2,7 @@
 using UnifiedAIChat.Api.Middlewares;
 using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Application.Common.Interfaces.Auth;
+using UnifiedAIChat.Application.Common.Interfaces.Chat;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
 using UnifiedAIChat.Application.Services;
 using UnifiedAIChat.Infrastructure.Authentication;
@@ -34,6 +35,11 @@ namespace UnifiedAIChat.Api
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IChatRepository, ChatRepository>();
         }
     }
 }

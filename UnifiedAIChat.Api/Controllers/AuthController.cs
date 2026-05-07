@@ -25,16 +25,19 @@ namespace UnifiedAIChat.Api.Controllers
             LoginData tokensData = await _authService.RegisterAsync(command,ct);
             AppendToknes(tokensData);
 
-            return Ok(tokensData);
+            return Ok(tokensData); //TODO: return new type
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> LoginAsync(LoginRequest request, CancellationToken ct)
         {
             LoginCommand command = new LoginCommand(request.Email, request.Password);
+
+            //TODO: CHECK refresh token if exists
+
             LoginData tokensData = await _authService.LoginAsync(command, ct);
             AppendToknes(tokensData);
-            return Ok(tokensData);
+            return Ok(tokensData);  //TODO: return new type
         }
         [HttpPost("refresh")]
         public async Task<ActionResult<string>> RefreshAsync(CancellationToken ct)
@@ -64,7 +67,7 @@ namespace UnifiedAIChat.Api.Controllers
                 HttpOnly = true,
                 Secure = true,
                 Path = "/auth",
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.Strict, 
             });
         }
         private void AppendToknes(LoginData tokensData)
