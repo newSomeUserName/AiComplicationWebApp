@@ -49,7 +49,7 @@ namespace UnifiedAIChat.Infrastructure.Authentication
             var rawToken = Convert.ToHexString(randomBytes);
             var hash = HashToken(rawToken);
 
-            return new RefreshTokenData { Hash = hash , RawToken = rawToken};
+            return new RefreshTokenData(rawToken, hash);
         }
             
         public string HashToken(string rawToken) //TODO: recreate to private method

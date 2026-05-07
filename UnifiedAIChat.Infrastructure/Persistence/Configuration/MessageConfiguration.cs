@@ -14,7 +14,9 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Configuration
         {
             builder.HasKey(m => m.Id);
 
-            builder.HasKey(m => m.ChatId);
+            //builder.HasKey(m => m.ChatId);
+
+            builder.HasIndex(m => m.ChatId);
 
             builder.Property(m => m.Content).IsRequired();
 

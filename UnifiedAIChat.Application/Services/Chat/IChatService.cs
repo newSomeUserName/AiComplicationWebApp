@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Application.Common.Models;
 
-namespace UnifiedAIChat.Application.Common.Interfaces.Chat
+namespace UnifiedAIChat.Application.Services.Chat
 {
     public interface IChatService
     {

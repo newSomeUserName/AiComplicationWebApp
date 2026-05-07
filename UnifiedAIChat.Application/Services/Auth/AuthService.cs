@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Application.Common.Exceptions;
 using UnifiedAIChat.Application.Common.Interfaces;
-using UnifiedAIChat.Application.Common.Interfaces.Auth;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
 using UnifiedAIChat.Application.Common.Models;
 using UnifiedAIChat.Application.Common.Models.Auth;
 using UnifiedAIChat.Domain.Entities;
 
-namespace UnifiedAIChat.Application.Services
+namespace UnifiedAIChat.Application.Services.Auth
 {
     public class AuthService : IAuthService
     {

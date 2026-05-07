@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Application.Common.Models.Auth;
 
-namespace UnifiedAIChat.Application.Common.Interfaces.Auth
+namespace UnifiedAIChat.Application.Services.Auth
 {
     public interface IAuthService
     {

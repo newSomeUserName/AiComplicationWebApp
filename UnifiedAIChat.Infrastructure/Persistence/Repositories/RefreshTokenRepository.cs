@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnifiedAIChat.Application.Common.Interfaces;
+using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
 using UnifiedAIChat.Domain.Entities;
 
 namespace UnifiedAIChat.Infrastructure.Persistence.Repositories

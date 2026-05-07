@@ -4,9 +4,5 @@ using System.Text;
 
 namespace UnifiedAIChat.Application.Common.Models
 {
-    public class RefreshTokenData // TODO : reform record
-    {
-        public string RawToken { get; set; }
-        public string Hash { get; set; }
-    }
+    public record RefreshTokenData(string RawToken, string Hash);
 }

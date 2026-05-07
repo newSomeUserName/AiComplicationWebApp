@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnifiedAIChat.Domain.Entities;
 
-namespace UnifiedAIChat.Application.Common.Interfaces
+namespace UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces
 {
     public interface IRefreshTokenRepository
     {

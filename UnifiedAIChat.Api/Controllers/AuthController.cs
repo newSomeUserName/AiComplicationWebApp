@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UnifiedAIChat.Api.Dtos.Auth;
-using UnifiedAIChat.Application.Common.Interfaces.Auth;
 using UnifiedAIChat.Application.Common.Models.Auth;
+using UnifiedAIChat.Application.Services.Auth;
 
 namespace UnifiedAIChat.Api.Controllers
 {
