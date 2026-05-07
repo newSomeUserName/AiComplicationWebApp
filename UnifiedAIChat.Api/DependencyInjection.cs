@@ -1,10 +1,15 @@
-﻿using UnifiedAIChat.Api.Extensions;
+﻿using Anthropic;
+using Anthropic.Core;
+using Microsoft.Extensions.Options;
+using UnifiedAIChat.Api.Extensions;
 using UnifiedAIChat.Api.Middlewares;
 using UnifiedAIChat.Application.Common.Interfaces;
+using UnifiedAIChat.Application.Common.Interfaces.AI;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
 using UnifiedAIChat.Application.Services.Auth;
 using UnifiedAIChat.Application.Services.Chat;
 using UnifiedAIChat.Application.Services.Messege;
+using UnifiedAIChat.Infrastructure.AI;
 using UnifiedAIChat.Infrastructure.Authentication;
 using UnifiedAIChat.Infrastructure.Persistence;
 using UnifiedAIChat.Infrastructure.Persistence.Repositories;
@@ -44,6 +49,28 @@ namespace UnifiedAIChat.Api
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IMessegeService, MessegeService>();
 
+
+            builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+
+
+            builder.Services.AddOptions<ApiOptions>()
+                .Bind(builder.Configuration.GetSection(ApiOptions.SectionName));
+
+
+
+            builder.Services.AddSingleton<AnthropicClient>(sp =>
+            {
+                var options = sp.GetRequiredService<IOptions<ApiOptions>>().Value;
+
+                return new AnthropicClient
+                {
+                    ApiKey = options.ApiKey,
+                    MaxRetries = 2,
+                    Timeout = TimeSpan.FromSeconds(20)
+                };
+            });
+            //IAIChatProvider,
+            builder.Services.AddScoped< ClaudeAIChatProvider>();
         }
     }
 }

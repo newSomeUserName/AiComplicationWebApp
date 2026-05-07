@@ -61,6 +61,7 @@ namespace UnifiedAIChat.Api.Controllers
 
             return NoContent();
         }
+        
         private void _deleteCookies(string tokenType)
         {
             Response.Cookies.Delete(tokenType, new CookieOptions { 
