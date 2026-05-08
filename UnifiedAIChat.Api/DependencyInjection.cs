@@ -69,8 +69,7 @@ namespace UnifiedAIChat.Api
                     Timeout = TimeSpan.FromSeconds(20)
                 };
             });
-            //IAIChatProvider,
-            builder.Services.AddScoped< ClaudeAIChatProvider>();
+            builder.Services.AddScoped<IAIChatProvider, ClaudeAIChatProvider>();
         }
     }
 }

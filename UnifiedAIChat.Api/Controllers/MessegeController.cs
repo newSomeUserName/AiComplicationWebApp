@@ -7,7 +7,7 @@ using UnifiedAIChat.Application.Services.Messege;
 namespace UnifiedAIChat.Api.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("messege")]
     public class MessegeController : ControllerBase
     {
@@ -19,9 +19,9 @@ namespace UnifiedAIChat.Api.Controllers
         [HttpPost("send")]
         public async Task<ActionResult<string>> SendMessegeAsync(SendMessegeRequest messegeRequest, CancellationToken ct)
         {
-            var messegeCommand = new SendMessegeCommand(messegeRequest.ChatId, messegeRequest.Messege, messegeRequest.IsUser);
-            var messegeId = await _messegeService.SendMessageAsync(messegeCommand, ct);
-            return messegeId.ToString();
+            var messegeCommand = new SendMessegeCommand(messegeRequest.ChatId, messegeRequest.Message, messegeRequest.IsUser);
+            var replyMessage = await _messegeService.SendMessageAsync(messegeCommand, ct);
+            return replyMessage.ToString();
         }
     }
 }

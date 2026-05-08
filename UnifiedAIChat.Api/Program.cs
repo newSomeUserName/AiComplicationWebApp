@@ -9,10 +9,7 @@ builder.InitializeInjections();
 var app = builder.Build();
 
 
-app.MapGet("/gpt", async ([FromServices]ClaudeAIChatProvider aIChatProvider) =>
-{
-    return await aIChatProvider.GenerateReplyAsync();
-});
+
 
 
 app.UseExceptionHandler("/error");
