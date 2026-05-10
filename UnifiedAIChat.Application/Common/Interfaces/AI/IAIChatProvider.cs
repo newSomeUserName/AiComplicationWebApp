@@ -8,6 +8,6 @@ namespace UnifiedAIChat.Application.Common.Interfaces.AI
 {
     public interface IAIChatProvider
     {
-        Task<string> GenerateReplyAsync(IReadOnlyList<InputMessage> message, CancellationToken ct = default);
+        IAsyncEnumerable<string> GenerateReplyAsync(IReadOnlyList<InputMessage> message, CancellationToken ct = default);
     }
 }

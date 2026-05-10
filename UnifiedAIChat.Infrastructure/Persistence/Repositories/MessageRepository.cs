@@ -22,7 +22,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
         }
         public async Task<List<Message>> GetChatHistoryAsync(Guid chatId, CancellationToken ct)
         {
-            var asyncEnumerable =  await _context.Messages.Where(m => m.ChatId == chatId).OrderByDescending(m=> m.CreatedAt).Take(20).ToListAsync(ct);
+            var asyncEnumerable =  await _context.Messages.Where(m => m.ChatId == chatId).OrderBy(m=> m.CreatedAt).Take(20).ToListAsync(ct);
             return asyncEnumerable;
         }
     }

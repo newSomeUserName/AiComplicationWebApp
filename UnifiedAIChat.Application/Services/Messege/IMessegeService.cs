@@ -8,6 +8,6 @@ namespace UnifiedAIChat.Application.Services.Messege
 {
     public interface IMessegeService
     {
-        Task<string> SendMessageAsync(SendMessegeCommand messegeCommand, CancellationToken ct);
+        IAsyncEnumerable<string> SendMessageAsync(SendMessegeCommand messegeCommand, CancellationToken ct);
     }
 }
