@@ -19,14 +19,24 @@ namespace UnifiedAIChat.Api.Controllers
             _messegeService = messegeService;
         }
         [HttpPost("send")]
-        public async Task SendMessegeAsync(SendMessegeRequest messegeRequest, CancellationToken ct)
+        public async Task SendAndRecieveMessegeAsync(SendMessegeRequest messegeRequest, CancellationToken ct)
         {
             var messegeCommand = new SendMessegeCommand(messegeRequest.ChatId, messegeRequest.Message, messegeRequest.IsUser);
 
             Response.ContentType = "text/event-stream";
             Response.Headers.Append("Cache-Control", "no-cache"); // dlya too chtobi kesh ne bufferizovalsya na proxy , inache otvet klienti priyudet polniy
             Response.Headers.Append("X-Accel-Buffering", "no");
-            await foreach (var item in _messegeService.SendMessageAsync(messegeCommand, ct))
+
+            Guid chatId = await _messegeService.SendMessageAsync(messegeCommand, ct);
+
+            await _getStreamingAsync(chatId,ct);
+
+
+        }
+
+        private async Task _getStreamingAsync(Guid chatId, CancellationToken ct)
+        {
+            await foreach (var item in _messegeService.GetReplyAsync(chatId))
             {
                 if (string.IsNullOrEmpty(item)) continue;
 
@@ -36,7 +46,6 @@ namespace UnifiedAIChat.Api.Controllers
 
                 await Response.Body.FlushAsync(ct);// CHTOBI DANNIE NE KOPILIS V BUFFERE A OTPRAVLYALIS SRAZUZ
             }
-
         }
     }
 }

@@ -7,7 +7,7 @@ namespace UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces
 {
     public interface IMessageRepository
     {
-        Task SendMessageAsync(Message messege, CancellationToken ct = default);
+        Task SaveMessageAsync(Message messege, CancellationToken ct = default);
         Task<List<Message>> GetChatHistoryAsync(Guid chatId, CancellationToken ct = default);
     }
 }

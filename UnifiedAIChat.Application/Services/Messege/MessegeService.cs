@@ -24,17 +24,21 @@ namespace UnifiedAIChat.Application.Services.Messege
             _AIChatProvider = AIChatProvider;
             _messegeRepository = messegeRepository;
         }
-        public async IAsyncEnumerable<string> SendMessageAsync(SendMessegeCommand messegeCommand, [EnumeratorCancellation] CancellationToken ct)
+        public async Task<Guid> SendMessageAsync(SendMessegeCommand messegeCommand,CancellationToken ct)
+        {
+            Message message =
+                new Message() { ChatId = messegeCommand.ChatId, Content = messegeCommand.Message, CreatedAt = DateTime.UtcNow, Role = MessageRole.User, Id = Guid.NewGuid() };
+            await _messegeRepository.SaveMessageAsync(message,ct);
+
+            return message.Id;
+
+        }
+        public async IAsyncEnumerable<string> GetReplyAsync(Guid chatId, [EnumeratorCancellation] CancellationToken ct = default)
         {
 
 
-            await _messegeRepository.SendMessageAsync(new Message() { ChatId = messegeCommand.ChatId, Content = messegeCommand.Message, CreatedAt = DateTime.UtcNow, Role = MessageRole.User, Id = Guid.NewGuid() }, ct);//rename to SaveMessageAsync()
-
-            List<Message> messages = await _messegeRepository.GetChatHistoryAsync(messegeCommand.ChatId, ct);
+            List<Message> messages = await _messegeRepository.GetChatHistoryAsync(chatId, ct);
             List<InputMessage> newPromptCollection = messages.Select(m => new InputMessage { Content = m.Content, Role = m.Role }).ToList();
-
-
-
 
             await foreach (string chunkReply in _AIChatProvider.GenerateReplyAsync(newPromptCollection, ct))
             {
@@ -44,8 +48,10 @@ namespace UnifiedAIChat.Application.Services.Messege
 
 
             string resultReply = _getFullReplyFromAssistant();
-
-            await _messegeRepository.SendMessageAsync(new Message() { ChatId = messegeCommand.ChatId, Content = resultReply, CreatedAt = DateTime.UtcNow, Role = MessageRole.Assistant, Id = Guid.NewGuid() });//rename to SaveMessageAsync()
+            Message replyMessage =
+                new Message() { ChatId = chatId, Content = resultReply, CreatedAt = DateTime.UtcNow, Role = MessageRole.Assistant, Id = Guid.NewGuid() };
+            
+            await _messegeRepository.SaveMessageAsync(replyMessage);
 
         }
         private void _saveChunkReplyFromAssistant(string chunkReply)=> _sb.Append(chunkReply);

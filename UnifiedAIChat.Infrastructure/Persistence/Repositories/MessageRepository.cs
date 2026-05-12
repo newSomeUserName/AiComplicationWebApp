@@ -15,7 +15,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task SendMessageAsync(Message message, CancellationToken ct)
+        public async Task SaveMessageAsync(Message message, CancellationToken ct)
         {
             await _context.Messages.AddAsync(message, ct);
             await _context.SaveChangesAsync(ct);
