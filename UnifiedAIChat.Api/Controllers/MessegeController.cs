@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using UnifiedAIChat.Api.Dtos.Messege;
@@ -9,8 +10,8 @@ using static System.Net.Mime.MediaTypeNames;
 namespace UnifiedAIChat.Api.Controllers
 {
     [ApiController]
-    //[Authorize]
-    [Route("messege")]
+    [Authorize]
+    [Route("chat")]
     public class MessegeController : ControllerBase
     {
         private readonly IMessegeService _messegeService;
@@ -33,6 +34,7 @@ namespace UnifiedAIChat.Api.Controllers
 
 
         }
+        
 
         private async Task _getStreamingAsync(Guid chatId, CancellationToken ct)
         {

@@ -6,7 +6,7 @@ using UnifiedAIChat.Application.Services.Auth;
 namespace UnifiedAIChat.Api.Controllers
 {
     [ApiController]
-    [Route("auth")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private const string ACCESS_TOKEN = "access_token"; 
