@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UnifiedAIChat.Api.Dtos.Auth;
-using UnifiedAIChat.Application.Common.Models.Auth;
-using UnifiedAIChat.Application.Services.Auth;
+using UnifiedAIChat.Application.Auth.Login;
+using UnifiedAIChat.Application.Auth.Register;
+using UnifiedAIChat.Application.Auth.Services;
 
 namespace UnifiedAIChat.Api.Controllers
 {
@@ -22,7 +22,7 @@ namespace UnifiedAIChat.Api.Controllers
         public async Task<ActionResult<string>> RegisterAsync(RegisterRequest request, CancellationToken ct)
         {
             RegisterCommand command = new RegisterCommand(request.Name,request.Email, request.Password);
-            LoginData tokensData = await _authService.RegisterAsync(command,ct);
+            LoginResponse tokensData = await _authService.RegisterAsync(command,ct);
             AppendToknes(tokensData);
 
             return Ok(tokensData); //TODO: return new type
@@ -35,7 +35,7 @@ namespace UnifiedAIChat.Api.Controllers
 
             //TODO: CHECK refresh token if exists
 
-            LoginData tokensData = await _authService.LoginAsync(command, ct);
+            LoginResponse tokensData = await _authService.LoginAsync(command, ct);
             AppendToknes(tokensData);
             return Ok(tokensData);  //TODO: return new type
         }
@@ -43,7 +43,7 @@ namespace UnifiedAIChat.Api.Controllers
         public async Task<ActionResult<string>> RefreshAsync(CancellationToken ct)
         {
             string rawRefreshToken = Request.Cookies["refresh_token"] ?? throw new Exception("Unable to read refresh token");
-            LoginData tokensData = await _authService.RefreshAsync(rawRefreshToken);
+            LoginResponse tokensData = await _authService.RefreshAsync(rawRefreshToken);
             AppendToknes(tokensData);
             return Ok(tokensData);
         }
@@ -71,7 +71,7 @@ namespace UnifiedAIChat.Api.Controllers
                 SameSite = SameSiteMode.Strict, 
             });
         }
-        private void AppendToknes(LoginData tokensData)
+        private void AppendToknes(LoginResponse tokensData)
         {
             _appendTokens(tokensData.AccessToken, ACCESS_TOKEN);
             _appendTokens(tokensData.RefreshToken, REFRESH_TOKEN);

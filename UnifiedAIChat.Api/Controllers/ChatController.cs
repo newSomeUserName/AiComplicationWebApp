@@ -1,25 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using UnifiedAIChat.Api.Dtos.Chat.Requests;
+using UnifiedAIChat.Application.Chat.CreateChat;
+using UnifiedAIChat.Application.Chat.DeleteChat;
+using UnifiedAIChat.Application.Chat.RenameChat;
+using UnifiedAIChat.Application.Chat.Services;
 using UnifiedAIChat.Application.Common.Models;
-using UnifiedAIChat.Application.Common.Models.Chat;
-using UnifiedAIChat.Application.Services.Chat;
 
 namespace UnifiedAIChat.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("chat")]
+    [Route("api/chat")]
     public class ChatController : ControllerBase
     {
-        //TODO: registrate IChatService AND IChatRepository
 
         private readonly IChatService _chatService;
         public ChatController(IChatService chatService)
         {
             _chatService = chatService;
         }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateChat([FromBody]CreateChatRequest chatRequest, CancellationToken ct = default)
         {
@@ -31,11 +32,22 @@ namespace UnifiedAIChat.Api.Controllers
         [HttpDelete("delete")]
         public async Task<Guid> DeleteChatAsync(DeleteChatRequest deleteRequest, CancellationToken ct = default)
         {
-            Guid userId = Guid.Parse(User.FindFirst("Id")!.Value);
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             await _chatService.DeleteChatAsync(new DeleteChatCommand(deleteRequest.ChatId,userId));
 
             return userId;
         }
+
+        [HttpGet("chats")]
+        public async Task<string> GetAllChatsAsync()
+        {
+            Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            await _chatService.GetAllChatsAsync(userId);
+
+            return "dsafas";
+        }
+
         [HttpPut("rename")]
         public async Task<Guid> RenameChatAsync(RenameChatRequest renameRequest, CancellationToken ct = default)
         {

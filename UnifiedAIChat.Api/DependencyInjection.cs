@@ -3,12 +3,12 @@ using Anthropic.Core;
 using Microsoft.Extensions.Options;
 using UnifiedAIChat.Api.Extensions;
 using UnifiedAIChat.Api.Middlewares;
+using UnifiedAIChat.Application.Auth.Services;
+using UnifiedAIChat.Application.Chat.Services;
 using UnifiedAIChat.Application.Common.Interfaces;
 using UnifiedAIChat.Application.Common.Interfaces.AI;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
-using UnifiedAIChat.Application.Services.Auth;
-using UnifiedAIChat.Application.Services.Chat;
-using UnifiedAIChat.Application.Services.Messege;
+using UnifiedAIChat.Application.Messages.Services;
 using UnifiedAIChat.Infrastructure.AI;
 using UnifiedAIChat.Infrastructure.Authentication;
 using UnifiedAIChat.Infrastructure.Persistence;
@@ -47,7 +47,7 @@ namespace UnifiedAIChat.Api
 
 
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-            builder.Services.AddScoped<IMessegeService, MessegeService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
 
 
             builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));

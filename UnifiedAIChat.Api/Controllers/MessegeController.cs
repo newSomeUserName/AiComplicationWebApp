@@ -2,22 +2,20 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using UnifiedAIChat.Api.Dtos.Messege;
-using UnifiedAIChat.Application.Common.Models.Messege;
-using UnifiedAIChat.Application.Services.Messege;
-using static System.Net.Mime.MediaTypeNames;
+using UnifiedAIChat.Application.Messages.SendMessage;
+using UnifiedAIChat.Application.Messages.Services;
 
 namespace UnifiedAIChat.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("chat")]
+    [Route("api/messaege")]
     public class MessegeController : ControllerBase
     {
-        private readonly IMessegeService _messegeService;
-        public MessegeController(IMessegeService messegeService)
+        private readonly IMessageService _messageService;
+        public MessegeController(IMessageService messegeService)
         {
-            _messegeService = messegeService;
+            _messageService = messegeService;
         }
         [HttpPost("send")]
         public async Task SendAndRecieveMessegeAsync(SendMessegeRequest messegeRequest, CancellationToken ct)
@@ -28,7 +26,7 @@ namespace UnifiedAIChat.Api.Controllers
             Response.Headers.Append("Cache-Control", "no-cache"); // dlya too chtobi kesh ne bufferizovalsya na proxy , inache otvet klienti priyudet polniy
             Response.Headers.Append("X-Accel-Buffering", "no");
 
-            Guid chatId = await _messegeService.SendMessageAsync(messegeCommand, ct);
+            Guid chatId = await _messageService.SendMessageAsync(messegeCommand, ct);
 
             await _getStreamingAsync(chatId,ct);
 
@@ -38,7 +36,7 @@ namespace UnifiedAIChat.Api.Controllers
 
         private async Task _getStreamingAsync(Guid chatId, CancellationToken ct)
         {
-            await foreach (var item in _messegeService.GetReplyAsync(chatId))
+            await foreach (var item in _messageService.GetReplyAsync(chatId))
             {
                 if (string.IsNullOrEmpty(item)) continue;
 

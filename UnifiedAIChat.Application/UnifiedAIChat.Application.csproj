@@ -10,4 +10,8 @@
     <ProjectReference Include="..\UnifiedAIChat.Domain\UnifiedAIChat.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Messages\Commands\" />
+  </ItemGroup>
+
 </Project>
