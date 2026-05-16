@@ -15,7 +15,7 @@ namespace UnifiedAIChat.Infrastructure.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
-
+        
     }
 
 

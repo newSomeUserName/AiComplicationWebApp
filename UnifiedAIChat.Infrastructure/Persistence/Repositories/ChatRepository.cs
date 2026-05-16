@@ -30,7 +30,15 @@ namespace UnifiedAIChat.Infrastructure.Persistence.Repositories
 
         }
 
-        
+        public async Task<List<Chat>> GetAllAsync(Guid userId, string? cursor, int limit, CancellationToken ct = default)
+        {
+            DateTime afterDate = cursor is not null ? DateTime.Now : DateTime.MaxValue;
+
+            return await _context.Chats.AsNoTracking().Where(c => c.UserId == userId && afterDate > c.UpdatedAt)
+                .OrderByDescending(c => c.UpdatedAt)
+                .Take(limit + 1).ToListAsync();
+              
+        }
 
         public async Task<Guid> RenameAsync(Guid chatId, Guid userId, string newName, CancellationToken ct = default)
         {

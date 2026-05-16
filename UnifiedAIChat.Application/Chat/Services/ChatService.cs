@@ -2,6 +2,7 @@
 using UnifiedAIChat.Application.Chat.DeleteChat;
 using UnifiedAIChat.Application.Chat.RenameChat;
 using UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces;
+using UnifiedAIChat.Application.Common.Models;
 using UnifiedAIChat.Domain.Entities;
 
 
@@ -30,9 +31,10 @@ namespace UnifiedAIChat.Application.Chat.Services
             return await _chatRepository.DeleteAsync(deleteChatCommand.chatId, deleteChatCommand.userId, ct);
         }
 
-        public Task<string> GetAllChatsAsync(Guid userId, CancellationToken ct = default)
+        public async Task<PagedResponse> GetAllChatsAsync(Guid userId, string? cursor, int limit, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var chats = await _chatRepository.GetAllAsync(userId, cursor,limit,ct);
+            return null;
         }
 
         public async Task<Guid> RenameChatAsync(Guid chatId, Guid userId, string newName, CancellationToken ct = default)

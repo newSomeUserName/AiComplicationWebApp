@@ -39,13 +39,13 @@ namespace UnifiedAIChat.Api.Controllers
         }
 
         [HttpGet("chats")]
-        public async Task<string> GetAllChatsAsync()
+        public async Task<ActionResult<PagedResponse>> GetAllChatsAsync([FromQuery] string? cursor, [FromQuery] int limit = 20, CancellationToken ct = default)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            await _chatService.GetAllChatsAsync(userId);
+            await _chatService.GetAllChatsAsync(userId,cursor, limit, ct);
 
-            return "dsafas";
+            return null;
         }
 
         [HttpPut("rename")]

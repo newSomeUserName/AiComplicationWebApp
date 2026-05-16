@@ -7,5 +7,6 @@ namespace UnifiedAIChat.Application.Common.Interfaces.RepositoryInterfaces
         Task AddAsync(ChatClass chats, CancellationToken ct = default);
         Task<Guid> RenameAsync(Guid chatId, Guid userId, string newName, CancellationToken ct = default);
         Task<Guid> DeleteAsync(Guid chatId,Guid userId, CancellationToken ct = default);
+        Task<List<ChatClass>> GetAllAsync(Guid userId,string? cursor,int limit, CancellationToken ct = default);
     }
 }
